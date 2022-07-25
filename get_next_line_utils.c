@@ -6,8 +6,54 @@
 /*   By: hsano </var/mail/hsano>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/25 21:17:23 by hsano             #+#    #+#             */
-/*   Updated: 2022/07/25 21:17:24 by hsano            ###   ########.fr       */
+/*   Updated: 2022/07/26 02:47:59 by hsano            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "get_next_line.h"
 
+void	*ft_memchr(const void *s, int c, size_t n)
+{
+	size_t			i;
+	unsigned char	*p;
+	unsigned char	tmp;
+
+	i = 0;
+	p = (unsigned char *)s;
+	tmp = (unsigned char)c;
+	while (i < n)
+	{
+		if (*(p++) == tmp)
+			return ((void *)&(s[i]));
+		i++;
+	}
+	return (NULL);
+}
+
+size_t	ft_strlen(const char *s)
+{
+	size_t	i;
+
+	if (!s)
+		return (0);
+	i = 0;
+	while ((*(s++)))
+		i++;
+	return (i);
+}
+
+char	*ft_strcpy(char *dest, char *src)
+{
+	int	i;
+
+	i = 0;
+	if (!src)
+		return (dest);
+	while (src[i])
+	{
+		dest[i] = src[i];
+		i++;
+	}
+	dest[i] = src[i];
+	return (dest);
+}
