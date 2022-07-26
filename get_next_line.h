@@ -6,7 +6,7 @@
 /*   By: hsano </var/mail/hsano>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/25 21:17:31 by hsano             #+#    #+#             */
-/*   Updated: 2022/07/26 11:46:46 by hsano            ###   ########.fr       */
+/*   Updated: 2022/07/26 19:02:07 by hsano            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,10 @@
 # endif 
 # define MIN_BUFFER_SIZE 256
 
-size_t	ft_strlen(const char *s);
 char	*ft_strcpy(char *dest, char *src);
 void	*ft_memchr(const void *s, int c, size_t n);
-char *get_next_line(int fd);
+char	*get_next_line(int fd);
+char	*ft_strdup(const char *s1);
+size_t	ft_strlen(const char *s);
 
 # endif 

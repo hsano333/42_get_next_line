@@ -6,7 +6,7 @@
 /*   By: hsano </var/mail/hsano>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/25 21:17:23 by hsano             #+#    #+#             */
-/*   Updated: 2022/07/26 02:47:59 by hsano            ###   ########.fr       */
+/*   Updated: 2022/07/26 19:01:45 by hsano            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,4 +56,21 @@ char	*ft_strcpy(char *dest, char *src)
 	}
 	dest[i] = src[i];
 	return (dest);
+}
+
+char	*ft_strdup(const char *s1)
+{
+	size_t	size;
+	char	*p;
+	char	*bk;
+
+	size = ft_strlen(s1);
+	p = (char *)malloc(size + 1);
+	bk = p;
+	if (p == NULL)
+		return (NULL);
+	p[size] = '\0';
+	while (size--)
+		*(p++) = *(s1++);
+	return (bk);
 }
