@@ -6,7 +6,7 @@
 /*   By: hsano </var/mail/hsano>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/25 21:17:31 by hsano             #+#    #+#             */
-/*   Updated: 2022/07/26 19:02:07 by hsano            ###   ########.fr       */
+/*   Updated: 2022/07/27 00:58:03 by hsano            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 # include <limits.h>
 # include <errno.h>
 # ifndef BUFFER_SIZE
-# define BUFFER_SIZE 512
+# define BUFFER_SIZE 1
 # endif 
 # define MIN_BUFFER_SIZE 256
 
