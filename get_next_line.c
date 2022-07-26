@@ -6,11 +6,36 @@
 /*   By: hsano </var/mail/hsano>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/25 21:15:11 by hsano             #+#    #+#             */
-/*   Updated: 2022/07/26 02:52:00 by hsano            ###   ########.fr       */
+/*   Updated: 2022/07/26 13:16:21 by hsano            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+
+int	handling_end(char **p, char *old,  ssize_t read_num,ssize_t i)
+{
+	char	*lf;
+
+	(*p)[i + BUFFER_SIZE] = '\0';
+	lf = ft_memchr(&((*p)[i]), '\n', BUFFER_SIZE);
+	if (read_num < 0 && errno != EINTR)
+	{
+		free(*p);
+		old = NULL;
+		return (true);
+	}
+	else if (read_num == 0)
+	{
+		free(*p);
+		*p = NULL;
+		//old = NULL;
+		return (true);
+	}
+	else if (lf)
+		return (true);
+	return (false);
+
+}
 
 char	*mange_memory(char *old, size_t size)
 {
@@ -20,7 +45,11 @@ char	*mange_memory(char *old, size_t size)
 	old_len = ft_strlen(old);
 	p = malloc(size + old_len + 1);
 	if (!p)
+	{
+		if (old)
+			free(old);
 		return (NULL);
+	}
 	p = ft_strcpy(p, old);
 	if (old)
 		free(old);
@@ -32,30 +61,27 @@ char	*get_line(int fd, char *old, size_t size)
 {
 	size_t	i;
 	char	*p;
-	char	*lf;
 	size_t	old_len;
-	size_t	byte_num;
+	ssize_t	read_num;
 
 	p = mange_memory(old, size);
+	if (!p)
+		return (NULL);
 	old_len = ft_strlen(old);
 	i = old_len;
-	byte_num = BUFFER_SIZE;
-	while (byte_num == BUFFER_SIZE  )
+	read_num = BUFFER_SIZE;
+	while (read_num == BUFFER_SIZE)
 	{
-		byte_num = read(fd, &(p[i]), BUFFER_SIZE);
-		lf = ft_memchr(&(p[i]), '\n', BUFFER_SIZE);
-		if (lf)
-			return (p);
-		if (byte_num < 0 && errno != EINTR)
-			return (p);
+		read_num = read(fd, &(p[i]), BUFFER_SIZE);
+		if (handling_end(&p, old, read_num, i))
+			break;
 		i += BUFFER_SIZE;
-		if (i < size + old_len + 1 - BUFFER_SIZE)
+		if (i >= size + old_len + 1 - BUFFER_SIZE)
 		{
-			p[i] = '\0';
 			return (get_line(fd, p, size));
 		}
 	}
-	return p;
+	return (p);
 }
 
 char *get_next_line(int fd)
@@ -71,15 +97,4 @@ char *get_next_line(int fd)
 	else
 		size = MIN_BUFFER_SIZE;
 	return (get_line(fd, old, size));
-
-	/*
-	while (byte_num == BUFFER_SIZE)
-	{
-		p = get_p(fd, old);
-		byte_num = read(fd, p, BUFFER_SIZE);
-		if (byte_num < 0 && errno != EINTR)
-			return (FALSE);
-		p = p + SIZE;
-	}
-	*/
 }
