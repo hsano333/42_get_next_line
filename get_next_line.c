@@ -6,7 +6,7 @@
 /*   By: hsano </var/mail/hsano>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/25 21:15:11 by hsano             #+#    #+#             */
-/*   Updated: 2022/07/27 03:27:45 by hsano            ###   ########.fr       */
+/*   Updated: 2022/07/27 04:09:50 by hsano            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,16 @@ int	parse_line(char **p, char **old,  ssize_t read_num,ssize_t i)
 	char	*lf;
 
 	//(*p)[i + read_num] = '\0';
+	
 	lf = ft_memchr(*p, '\n', read_num);
-	//printf("i=%zu,read_num=%zu, p=%s,lf=%s\n",i,read_num, *p,lf);
+	//printf("i=%zu,read_num=%zu, p=%s,lf=%s, p[0]=%d,lf[0]=%d,%d\n",i,read_num, *p,lf,*p[0],lf[0],'\n');
 	if (lf)
 	{
-		printf("test No.1\n");
-		*old = ft_strdup(lf + 1);
+		//printf("test No.1 lf=%s\n",lf);
+		if (lf[1] != '\0')
+			*old = ft_strdup(lf + 1);
+		else
+			*old = NULL;
 		lf[1] = '\0';
 		//printf("old=%s, lf=%s,\n",*old,lf);
 		//printf("old=%s,p=%s\n",*old,*p);
@@ -42,7 +46,7 @@ int	parse_line(char **p, char **old,  ssize_t read_num,ssize_t i)
 		if (lf != NULL)
 			lf[1] = '\0';
 			*/
-		printf("test No.3 i=%zu,lf=%s\n",i,lf);
+		//printf("test No.3 i=%zu,lf=%s\n",i,lf);
 		if (i == 0)
 		{
 			//printf("test No.4\n");
@@ -57,10 +61,10 @@ int	parse_line(char **p, char **old,  ssize_t read_num,ssize_t i)
 	else if (read_num < BUFFER_SIZE)
 	{
 		*p[i] = '\0';
-		printf("test No.4\n");
+		//printf("test No.4\n");
 		return (true);
 	}
-	printf("test No.5\n");
+	//printf("test No.5\n");
 	return (false);
 }
 
@@ -138,6 +142,7 @@ char *get_next_line(int fd)
 		*/
 	if (old != NULL && parse_line(&old, &tmp, ft_strlen(old), ft_strlen(old)))
 	{
+		//printf("swap No.1 old=%s, tmp=%s\n",old,tmp);
 		swap = tmp;
 		tmp = old;
 		old = swap;
