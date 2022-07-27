@@ -6,7 +6,7 @@
 /*   By: hsano </var/mail/hsano>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/25 21:15:11 by hsano             #+#    #+#             */
-/*   Updated: 2022/07/27 04:09:50 by hsano            ###   ########.fr       */
+/*   Updated: 2022/07/27 12:22:01 by hsano            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,14 +39,14 @@ int	parse_line(char **p, char **old,  ssize_t read_num,ssize_t i)
 		*old = NULL;
 		return (true);
 	}
-	else if (read_num < BUFFER_SIZE)
+	else if (i != -1 && read_num < BUFFER_SIZE)
 	{
 		/*
 		lf = ft_memchr(*p, EOF, read_num);
 		if (lf != NULL)
 			lf[1] = '\0';
 			*/
-		//printf("test No.3 i=%zu,lf=%s\n",i,lf);
+		//printf("test No.3 i=%zu,read_num=%zu,lf=%s,p=%s\n",i,read_num,lf,*p);
 		if (i == 0)
 		{
 			//printf("test No.4\n");
@@ -54,14 +54,13 @@ int	parse_line(char **p, char **old,  ssize_t read_num,ssize_t i)
 			free(*p);
 			*p = NULL;
 		}
+		else
+		{
+
+			(*p)[i] = '\0';
+		}
 		//*p = NULL;
 		*old = NULL;
-		return (true);
-	}
-	else if (read_num < BUFFER_SIZE)
-	{
-		*p[i] = '\0';
-		//printf("test No.4\n");
 		return (true);
 	}
 	//printf("test No.5\n");
@@ -73,46 +72,58 @@ char	*mange_memory(char *old, size_t size)
 	size_t	old_len;
 	char	*p;
 
+	//printf("mangage_memory No.1 old_len=%zu\n",ft_strlen(old));
 	old_len = ft_strlen(old);
+	//printf("mangage_memory No.2 old_len=%zu\n",ft_strlen(old));
+	//printf("old_len=%zu\n",old_len);
 	p = malloc(size + old_len + 1);
-	p[size + old_len + 1] = '\0';
+	//p[size + old_len + 1] = '\0';
+	//printf("mangage_memory No.3 old_len=%zu\n",ft_strlen(old));
 	if (!p)
 	{
 		if (old)
 			free(old);
 		return (NULL);
 	}
+	//printf("mangage_memory No.4 old_len=%zu\n",ft_strlen(old));
 	p = ft_strcpy(p, old);
+	//printf("mangage_memory No.5 old_len=%zu\n",ft_strlen(old));
 	if (old)
 		free(old);
+	//printf("mangage_memory No.6 old_len=%zu\n",ft_strlen(old));
 	return (p);
 
 }
 
-char	*get_line(int fd, char **old, size_t size)
+char	*get_line(int fd, char **old, size_t size, size_t i)
 {
-	size_t	i;
+	//size_t	i;
 	char	*p;
 	size_t	old_len;
 	ssize_t	read_num;
 
+	//printf("start get_line No.1 old_len=%zu old=\n",ft_strlen(*old));
 	p = mange_memory(*old, size);
+	//printf("start get_line No.2 old_len=%zu old=%s\n",ft_strlen(*old),p);
 	if (!p)
 		return (NULL);
+	//printf("start get_line No.3 old_len=%zu old=%s\n",ft_strlen(*old),p);
 	old_len = ft_strlen(*old);
-	i = old_len;
+	//printf("start get_line No.4 old_len=%zu old=%s\n",ft_strlen(*old),p);
+	//i = old_len;
 	read_num = BUFFER_SIZE;
 	while (read_num == BUFFER_SIZE)
 	{
 		read_num = read(fd, &(p[i]), BUFFER_SIZE);
 		//printf("read p=%s,i=%zu\n",p,i);
+		i += read_num;
 		if (parse_line(&p, old, read_num, i))
 			break;
-		i += read_num;
-		if (i >= size + old_len + 1 - BUFFER_SIZE)
+		if (i >= size + old_len - BUFFER_SIZE)
 		{
 			p[i] = '\0';
-			return (get_line(fd, &p, size));
+			//printf("start get_line No.3 old_len=%zu \n",ft_strlen(p));
+			return (get_line(fd, &p, size, i));
 		}
 	}
 	//printf("p=%s\n",p);
@@ -140,7 +151,7 @@ char *get_next_line(int fd)
 	else
 		printf("old is NULL\n");
 		*/
-	if (old != NULL && parse_line(&old, &tmp, ft_strlen(old), ft_strlen(old)))
+	if (old != NULL && parse_line(&old, &tmp, ft_strlen(old), -1))
 	{
 		//printf("swap No.1 old=%s, tmp=%s\n",old,tmp);
 		swap = tmp;
@@ -148,6 +159,7 @@ char *get_next_line(int fd)
 		old = swap;
 		return tmp;
 	}
-	return (get_line(fd, &old, size));
+	//printf("get_line\n");
+	return (get_line(fd, &old, size, 0));
 }
 

@@ -6,7 +6,7 @@
 /*   By: hsano </var/mail/hsano>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/25 21:17:31 by hsano             #+#    #+#             */
-/*   Updated: 2022/07/27 00:58:03 by hsano            ###   ########.fr       */
+/*   Updated: 2022/07/27 12:24:27 by hsano            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,9 @@
 # include <limits.h>
 # include <errno.h>
 # ifndef BUFFER_SIZE
-# define BUFFER_SIZE 1
+# define BUFFER_SIZE 8
 # endif 
-# define MIN_BUFFER_SIZE 256
+# define MIN_BUFFER_SIZE 8
 
 char	*ft_strcpy(char *dest, char *src);
 void	*ft_memchr(const void *s, int c, size_t n);

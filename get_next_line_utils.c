@@ -6,7 +6,7 @@
 /*   By: hsano </var/mail/hsano>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/25 21:17:23 by hsano             #+#    #+#             */
-/*   Updated: 2022/07/26 19:01:45 by hsano            ###   ########.fr       */
+/*   Updated: 2022/07/27 12:22:12 by hsano            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ size_t	ft_strlen(const char *s)
 
 char	*ft_strcpy(char *dest, char *src)
 {
-	int	i;
+	size_t	i;
 
 	i = 0;
 	if (!src)
