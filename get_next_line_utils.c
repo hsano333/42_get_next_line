@@ -6,12 +6,11 @@
 /*   By: hsano </var/mail/hsano>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/25 21:17:23 by hsano             #+#    #+#             */
-/*   Updated: 2022/07/28 01:12:07 by hsano            ###   ########.fr       */
+/*   Updated: 2022/07/28 03:46:41 by hsano            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-
 
 size_t	ft_strlen(const char *s)
 {
@@ -57,6 +56,7 @@ char	*ft_strdup(const char *s1)
 		*(p++) = *(s1++);
 	return (bk);
 }
+
 char	*ft_strnchr(const char *s, int c, size_t n)
 {
 	char	tmp;
@@ -70,22 +70,5 @@ char	*ft_strnchr(const char *s, int c, size_t n)
 	}
 	if (tmp == '\0')
 		return ((char *)s);
-	return (NULL);
-}
-void	*ft_memchr(const void *s, int c, size_t n)
-{
-	size_t			i;
-	unsigned char	*p;
-	unsigned char	tmp;
-
-	i = 0;
-	p = (unsigned char *)s;
-	tmp = (unsigned char)c;
-	while (i < n)
-	{
-		if (*(p++) == tmp)
-			return ((void *)&(s[i]));
-		i++;
-	}
 	return (NULL);
 }
