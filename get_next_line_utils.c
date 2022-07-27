@@ -6,29 +6,12 @@
 /*   By: hsano </var/mail/hsano>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/25 21:17:23 by hsano             #+#    #+#             */
-/*   Updated: 2022/07/27 12:22:12 by hsano            ###   ########.fr       */
+/*   Updated: 2022/07/28 01:12:07 by hsano            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-void	*ft_memchr(const void *s, int c, size_t n)
-{
-	size_t			i;
-	unsigned char	*p;
-	unsigned char	tmp;
-
-	i = 0;
-	p = (unsigned char *)s;
-	tmp = (unsigned char)c;
-	while (i < n)
-	{
-		if (*(p++) == tmp)
-			return ((void *)&(s[i]));
-		i++;
-	}
-	return (NULL);
-}
 
 size_t	ft_strlen(const char *s)
 {
@@ -73,4 +56,36 @@ char	*ft_strdup(const char *s1)
 	while (size--)
 		*(p++) = *(s1++);
 	return (bk);
+}
+char	*ft_strnchr(const char *s, int c, size_t n)
+{
+	char	tmp;
+
+	tmp = (char)c;
+	while (*s && n--)
+	{
+		if (*s == tmp)
+			return ((char *)s);
+		s++;
+	}
+	if (tmp == '\0')
+		return ((char *)s);
+	return (NULL);
+}
+void	*ft_memchr(const void *s, int c, size_t n)
+{
+	size_t			i;
+	unsigned char	*p;
+	unsigned char	tmp;
+
+	i = 0;
+	p = (unsigned char *)s;
+	tmp = (unsigned char)c;
+	while (i < n)
+	{
+		if (*(p++) == tmp)
+			return ((void *)&(s[i]));
+		i++;
+	}
+	return (NULL);
 }
