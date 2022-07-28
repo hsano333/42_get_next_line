@@ -6,7 +6,7 @@
 /*   By: hsano </var/mail/hsano>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/25 21:15:11 by hsano             #+#    #+#             */
-/*   Updated: 2022/07/28 15:38:33 by hsano            ###   ########.fr       */
+/*   Updated: 2022/07/28 15:58:33 by hsano            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "get_next_line_bonus.h"
@@ -110,12 +110,12 @@ char	*get_next_line(int fd)
 	char		*swap;
 	static char	*old[MAX_FD_SIZE] = {0};
 
-	if (fd < 0)
-		return (NULL);
-	if (BUFFER_SIZE <= 0)
+	if (fd < 0 || fd >= MAX_FD_SIZE)
 		return (NULL);
 	size = 0;
-	if (BUFFER_SIZE > MIN_BUFFER_SIZE)
+	if (BUFFER_SIZE <= 0)
+		return (NULL);
+	else if (BUFFER_SIZE > MIN_BUFFER_SIZE)
 		size = BUFFER_SIZE;
 	else
 		size = MIN_BUFFER_SIZE;
