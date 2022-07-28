@@ -6,7 +6,7 @@
 /*   By: hsano </var/mail/hsano>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/25 21:15:11 by hsano             #+#    #+#             */
-/*   Updated: 2022/07/28 15:03:08 by hsano            ###   ########.fr       */
+/*   Updated: 2022/07/28 15:38:33 by hsano            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "get_next_line_bonus.h"
@@ -108,7 +108,7 @@ char	*get_next_line(int fd)
 	size_t		size;
 	char		*tmp;
 	char		*swap;
-	static char	*old[_SC_STREAM_MAX];
+	static char	*old[MAX_FD_SIZE] = {0};
 
 	if (fd < 0)
 		return (NULL);
