@@ -6,7 +6,7 @@
 /*   By: hsano </var/mail/hsano>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/25 21:17:31 by hsano             #+#    #+#             */
-/*   Updated: 2022/07/28 15:59:13 by hsano            ###   ########.fr       */
+/*   Updated: 2022/07/28 16:26:33 by hsano            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,9 @@
 # define MIN_BUFFER_SIZE 512
 # define MAX_FD_SIZE 1024
 # include <fcntl.h>
-# include <sys/types.h>
-# include <sys/stat.h>
 # include <stdlib.h>
-# include <stdio.h>
 # include <stdbool.h>
 # include <unistd.h>
-# include <limits.h>
 # include <errno.h>
 
 char	*get_next_line(int fd);
