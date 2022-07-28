@@ -6,7 +6,7 @@
 /*   By: hsano </var/mail/hsano>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/25 21:15:11 by hsano             #+#    #+#             */
-/*   Updated: 2022/07/28 03:51:45 by hsano            ###   ########.fr       */
+/*   Updated: 2022/07/28 12:47:02 by hsano            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ char	*mange_memory(char *old, size_t size)
 	return (p);
 }
 
-char	*get_line(int fd, char **old, size_t size)
+char	*get_line(int fd, char **old, ssize_t size)
 {
 	char	*p;
 	ssize_t	old_len;
