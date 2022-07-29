@@ -6,39 +6,40 @@
 /*   By: hsano </var/mail/hsano>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/25 21:15:11 by hsano             #+#    #+#             */
-/*   Updated: 2022/07/28 14:59:20 by hsano            ###   ########.fr       */
+/*   Updated: 2022/07/29 12:04:34 by hsano            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-int	exist_lf(char **p, char **old, ssize_t i)
+int	exist_lf(char **str, char **old_str, ssize_t i)
 {
 	char	*lf;
 
-	lf = ft_strnchr(*p, '\n', i);
+	lf = ft_strnchr(*str, '\n', i);
 	if (lf)
 	{
-		if (lf[1] != '\0')
-			*old = ft_strdup(lf + 1);
+		if (lf[1] == '\0')
+			*old_str = NULL;
 		else
-			*old = NULL;
+			*old_str = ft_strdup(lf + 1);
 		lf[1] = '\0';
 		return (true);
 	}
 	return (false);
 }
 
-int	check_eof(char **p, char **old, ssize_t read_num, ssize_t i)
+int	check_eof(char **p, char **old_str, ssize_t read_num, ssize_t i)
 {
-	if (read_num < 0)
+	if (read_num < 0 && errno != EINTR)
 	{
-		if (errno == EINTR)
-			return (false);
 		free(*p);
 		*p = NULL;
+		*old_str = NULL;
 		return (true);
 	}
+	else if (exist_lf(p, old_str, i))
+		return (true);
 	else if (read_num < BUFFER_SIZE)
 	{
 		if (i == 0)
@@ -46,81 +47,78 @@ int	check_eof(char **p, char **old, ssize_t read_num, ssize_t i)
 			free(*p);
 			*p = NULL;
 		}
-		*old = NULL;
+		*old_str = NULL;
 		return (true);
 	}
 	return (false);
 }
 
-char	*mange_memory(char *old, size_t size)
+char	*mange_memory(char *old_str, size_t m_size, size_t old_str_len)
 {
-	size_t	old_len;
 	char	*p;
 
-	old_len = ft_strlen(old);
-	p = malloc(size + old_len + 1);
+	p = malloc(m_size + old_str_len + 1);
 	if (!p)
 	{
-		if (old)
-			free(old);
+		if (old_str)
+			free(old_str);
 		return (NULL);
 	}
-	p = ft_strcpy(p, old);
-	if (old)
-		free(old);
+	p = ft_strcpy(p, old_str);
+	if (old_str)
+		free(old_str);
 	return (p);
 }
 
-char	*get_line(int fd, char **old, ssize_t size)
+char	*read_fd(int fd, char **old_str, ssize_t m_size, ssize_t i)
 {
-	char	*p;
-	ssize_t	old_len;
+	char	*str;
+	ssize_t	old_str_len;
 	ssize_t	read_num;
-	ssize_t	i;
 
-	old_len = ft_strlen(*old);
-	p = mange_memory(*old, size);
-	if (!p)
+	old_str_len = i;
+	str = mange_memory(*old_str, m_size, old_str_len);
+	if (!str)
 		return (NULL);
 	read_num = BUFFER_SIZE;
-	i = old_len;
 	while (read_num == BUFFER_SIZE)
 	{
-		read_num = read(fd, &(p[i]), BUFFER_SIZE);
+		read_num = read(fd, &(str[i]), BUFFER_SIZE);
 		if (read_num > 0)
 			i += read_num;
-		p[i] = '\0';
-		if (exist_lf(&p, old, i) || check_eof(&p, old, read_num, i))
-			break ;
-		if (i >= size + old_len - BUFFER_SIZE)
-			return (get_line(fd, &p, size));
+		str[i] = '\0';
+		if (check_eof(&str, old_str, read_num, i))
+			return (str);
+		if (i >= m_size + old_str_len - BUFFER_SIZE)
+			return (read_fd(fd, &str, m_size, i));
 	}
-	return (p);
+	return (str);
 }
 
 char	*get_next_line(int fd)
 {
-	size_t		size;
+	size_t		m_size;
+	size_t		old_str_size;
 	char		*tmp;
 	char		*swap;
-	static char	*old;
+	static char	*old_str[MAX_FD_SIZE] = {0};
 
+	if (fd < 0 || fd >= MAX_FD_SIZE)
+		return (NULL);
 	if (BUFFER_SIZE <= 0)
 		return (NULL);
-	size = 0;
-	if (BUFFER_SIZE > MIN_BUFFER_SIZE)
-		size = BUFFER_SIZE;
+	else if (BUFFER_SIZE > MIN_BUFFER_SIZE)
+		m_size = BUFFER_SIZE;
 	else
-		size = MIN_BUFFER_SIZE;
+		m_size = MIN_BUFFER_SIZE;
 	tmp = NULL;
-	if (old != NULL && (exist_lf(&old, &tmp, -1)))
+	old_str_size = ft_strlen(old_str[fd]);
+	if (old_str[fd] != NULL && (exist_lf(&(old_str[fd]), &tmp, old_str_size)))
 	{
-		if (old[0] == '\0')
-			return (NULL);
 		swap = tmp;
-		tmp = old;
-		old = swap;
+		tmp = old_str[fd];
+		old_str[fd] = swap;
 		return (tmp);
 	}
-	return (get_line(fd, &old, size));
+	return (read_fd(fd, &(old_str[fd]), m_size, old_str_size));
 }
